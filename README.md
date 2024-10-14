@@ -82,12 +82,39 @@ print(result)
 
 在运行本项目之前，请确保安装以下依赖项：
 
-- PaddlePaddle
-- PaddleNLP
-- 其他依赖项可以通过 `requirements.txt` 安装
+- `PaddlePaddle>=3.0.0b0`（默认使用 CPU 版本）
+- `PaddleNLP==2.6.1`
+- `fastapi`
+- `uvicorn`
+
+### 安装依赖项
+
+可以通过 `requirements.txt` 安装所有依赖项：
 
 ```bash
 pip install -r requirements.txt
+```
+
+其中 `requirements.txt` 内容如下：
+
+```txt
+paddlenlp==2.6.1
+paddlepaddle>=3.0.0b0  # CPU版本
+fastapi
+uvicorn
+# paddlepaddle-gpu==3.0.0b1 # 注释掉这一行，使用CPU版本
+```
+
+如果需要使用 GPU 版本的 PaddlePaddle，可以取消注释 `requirements.txt` 中的 GPU 版本并使用以下命令安装：
+
+```bash
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/
+```
+
+或者通过清华大学镜像安装 PaddleNLP：
+
+```bash
+pip install paddlenlp==3.0.0b0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 ## 如何运行
@@ -102,4 +129,3 @@ pip install -r requirements.txt
 
 - [PaddleNLP](https://github.com/PaddlePaddle/PaddleNLP)
 - [Doccano](https://github.com/doccano/doccano)
-```
