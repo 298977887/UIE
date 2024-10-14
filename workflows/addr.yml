@@ -1,0 +1,49 @@
+name: Deploy API to Synology NAS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 🚚 将项目文件复制到目标服务器
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SYNOLOGY_HOST }}
+          username: ${{ secrets.SYNOLOGY_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SYNOLOGY_SSH_PORT }}
+          source: "."
+          target: "/volume1/docker/addr1nlp/"
+
+      - name: 🛠️ 在群晖上构建并运行Docker镜像
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SYNOLOGY_HOST }}
+          username: ${{ secrets.SYNOLOGY_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SYNOLOGY_SSH_PORT }}
+          script: |
+            echo "🚀 开始执行部署..."
+            cd /volume1/docker/addr1nlp
+            echo "🔧 正在构建临时镜像..."
+            /usr/local/bin/docker build -t addr1nlp-temp .
+            echo "🔧 正在停止旧容器..."
+            /usr/local/bin/docker stop addr1nlp || true
+            echo "🔧 正在删除旧容器..."
+            /usr/local/bin/docker rm addr1nlp || true
+            echo "🔧 正在删除旧镜像..."
+            /usr/local/bin/docker rmi addr1nlp || true
+            echo "🔧 重命名新镜像..."
+            /usr/local/bin/docker tag addr1nlp-temp addr1nlp
+            /usr/local/bin/docker rmi addr1nlp-temp
+            echo "🚀 正在运行新容器..."
+            /usr/local/bin/docker run -d -p 8000:8000 --name addr1nlp -v /volume1/三星SSD/ner_model:/app/ner_model -e TZ=Asia/Shanghai addr1nlp
+            echo "🎉 部署完成！" 

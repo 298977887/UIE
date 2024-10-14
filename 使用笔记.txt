@@ -1,0 +1,18 @@
+
+
+//
+python doccano.py --doccano_file ./data/admin.jsonl --splits 1 0 0
+
+python finetune.py --train_path ./data/train.txt --dev_path ./data/train.txt --output_dir ./checkpoint --model uie-base --learning_rate 1e-5 --batch_size 16 --max_seq_len 512 --num_train_epochs 10 --seed 1000 --logging_steps 10 --eval_steps 10 --device gpu --do_train --overwrite_output_dir
+
+
+pip install paddlenlp==3.0.0b0 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip install paddlepaddle==2.6.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip install --upgrade paddlenlp 
+pip install --upgrade paddlepaddle
+pip install --upgrade paddlenlp==3.0.0b0 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install paddlepaddle -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+python -m pip install paddlepaddle-gpu==3.0.0b1 -i https://www.paddlepaddle.org.cn/packages/stable/cu123/

@@ -1,0 +1,8 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+#data/
+checkpoint/
